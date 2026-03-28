@@ -597,6 +597,88 @@
             transform: translateY(0);
         }
 
+        /* 左右スライドイン */
+        .slide-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .slide-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .slide-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .slide-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* グリッド子要素のスタッガー遅延 */
+        .product-grid .product-card:nth-child(2) { transition-delay: 0.15s; }
+        .product-grid .product-card:nth-child(3) { transition-delay: 0.30s; }
+        .steps-grid .step-item:nth-child(2) { transition-delay: 0.15s; }
+        .steps-grid .step-item:nth-child(3) { transition-delay: 0.30s; }
+        .steps-grid .step-item:nth-child(4) { transition-delay: 0.45s; }
+        .gallery-grid .gallery-item:nth-child(2) { transition-delay: 0.10s; }
+        .gallery-grid .gallery-item:nth-child(3) { transition-delay: 0.20s; }
+        .gallery-grid .gallery-item:nth-child(4) { transition-delay: 0.30s; }
+        .gallery-grid .gallery-item:nth-child(5) { transition-delay: 0.40s; }
+        .gallery-grid .gallery-item:nth-child(6) { transition-delay: 0.50s; }
+
+        /* Hero 入場アニメーション */
+        @keyframes heroTitleReveal {
+            from { opacity: 0; transform: translateY(50px) scale(0.95); }
+            to   { opacity: 1; transform: translateY(0)   scale(1);    }
+        }
+        @keyframes heroSubReveal {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0);    }
+        }
+
+        .hero-title {
+            animation: heroTitleReveal 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+        }
+        .hero-subtitle {
+            animation: heroSubReveal 1s ease 0.9s both;
+        }
+        .university-badge {
+            animation: heroSubReveal 1s ease 1.2s both;
+        }
+
+        /* コンセプト画像フロート */
+        @keyframes floatImage {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-12px); }
+        }
+        .concept-image {
+            animation: floatImage 6s ease-in-out infinite;
+        }
+
+        /* セクション見出しアンダーライン伸長 */
+        .section-title::after {
+            width: 0 !important;
+            transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
+        }
+        .section-title.line-visible::after {
+            width: 60px !important;
+        }
+
+        /* CTAボタン パルス */
+        @keyframes ctaPulse {
+            0%, 100% { box-shadow: 0 2px 8px rgba(75, 46, 46, 0.2); }
+            50%       { box-shadow: 0 4px 20px rgba(75, 46, 46, 0.45), 0 0 0 6px rgba(75, 46, 46, 0.06); }
+        }
+        .btn-primary {
+            animation: ctaPulse 3s ease-in-out infinite;
+        }
+        .btn-primary:hover {
+            animation: none;
+        }
+
         /* スクロールアニメーション用 */
         @keyframes fadeInUp {
             from {
@@ -647,13 +729,13 @@
         <div class="container">
             <h2 class="section-title">物語</h2>
             <div class="concept-grid">
-                <div class="concept-text fade-in">
+                <div class="concept-text slide-left">
                     <h3>絹（シルク）を日本の名産へ</h3>
                     <p>絹と日本の歴史は深いものの、現状あまり知られていない。絹は日本を成長させ、日本を支えてきたからこそ、より多くの人に絹の素晴らしさ、歴史をもっと知ってもらいたい。</p>
                     <p>富岡製糸場のある群馬県から発信をしていくことで群馬県をシルクの力で盛り上げていきたい。</p>
                     <p>大切な人に日頃伝えられない思いをのせたプレゼント。人との関係を紡ぐように、糸を紡ぐ。</p>
                 </div>
-                <div class="concept-image fade-in">
+                <div class="concept-image slide-right">
                     <!-- 製糸工場の風景画像がここに表示されます -->
                 </div>
             </div>
@@ -841,8 +923,21 @@
                 });
             }, observerOptions);
 
-            document.querySelectorAll('.fade-in').forEach(el => {
+            document.querySelectorAll('.fade-in, .slide-left, .slide-right').forEach(el => {
                 observer.observe(el);
+            });
+
+            // セクション見出しアンダーライン
+            const titleObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('line-visible');
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            document.querySelectorAll('.section-title').forEach(el => {
+                titleObserver.observe(el);
             });
         }
 
@@ -889,12 +984,17 @@
             
             // 初期表示要素のアニメーション
             setTimeout(() => {
-                const fadeElements = document.querySelectorAll('.fade-in');
+                const fadeElements = document.querySelectorAll('.fade-in, .slide-left, .slide-right');
                 fadeElements.forEach((el, index) => {
                     if (el.getBoundingClientRect().top < window.innerHeight) {
                         setTimeout(() => {
                             el.classList.add('visible');
                         }, index * 100);
+                    }
+                });
+                document.querySelectorAll('.section-title').forEach(el => {
+                    if (el.getBoundingClientRect().top < window.innerHeight) {
+                        el.classList.add('line-visible');
                     }
                 });
             }, 100);

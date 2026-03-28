@@ -561,6 +561,83 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* 左右スライドイン */
+        .slide-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .slide-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .slide-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .slide-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* セクション見出しアンダーライン伸長 */
+        .section-title::after {
+            width: 0 !important;
+            transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
+        }
+        .section-title.line-visible::after {
+            width: 60px !important;
+        }
+
+        /* Mission cards スタッガー */
+        .mission-grid .mission-card:nth-child(2) { transition-delay: 0.15s; }
+        .mission-grid .mission-card:nth-child(3) { transition-delay: 0.30s; }
+
+        /* Partners grid スタッガー */
+        .partners-grid .partner-card:nth-child(2) { transition-delay: 0.12s; }
+        .partners-grid .partner-card:nth-child(3) { transition-delay: 0.24s; }
+        .partners-grid .partner-card:nth-child(4) { transition-delay: 0.36s; }
+
+        /* Future goals スタッガー */
+        .future-goals .goal-item:nth-child(2) { transition-delay: 0.15s; }
+        .future-goals .goal-item:nth-child(3) { transition-delay: 0.30s; }
+
+        /* タイムライン縦線ドロー */
+        @keyframes drawLine {
+            from { height: 0; }
+            to   { height: 100%; }
+        }
+        .timeline::before {
+            height: 0;
+            animation: drawLine 2s ease forwards;
+            animation-play-state: paused;
+        }
+        .timeline.line-drawn::before {
+            animation-play-state: running;
+        }
+
+        /* タイムラインドット パルス */
+        @keyframes dotPulse {
+            0%, 100% { box-shadow: 0 0 0 2px var(--brown-light); }
+            50%       { box-shadow: 0 0 0 6px rgba(127, 92, 73, 0.3), 0 0 0 2px var(--brown-light); }
+        }
+        .timeline-dot.visible {
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+
+        /* ページヘッダーアニメーション */
+        @keyframes pageHeaderReveal {
+            from { opacity: 0; transform: translateY(25px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .page-header h1 {
+            animation: pageHeaderReveal 1s ease 0.2s both;
+        }
+        .page-header p {
+            animation: pageHeaderReveal 1s ease 0.5s both;
+        }
     </style>
 </head>
 <body>
@@ -590,19 +667,19 @@
             <h2 class="section-title fade-in">Mission・Vision・Values</h2>
             
             <div class="mission-grid">
-                <div class="mission-card fade-in">
+                <div class="mission-card slide-left">
                     <h3><span class="mission-icon">🎯</span>Mission</h3>
                     <p class="mission-description">
                         絹産業で群馬を盛り上げる。富岡製糸場を世界に誇る日本のシンボルにし、産業の街「糸」「木材」を伝承する製糸拠点化を目指します。群馬県から絹の魅力を全国・世界に発信していきます。
                     </p>
                 </div>
-                <div class="mission-card fade-in">
+                <div class="mission-card slide-left">
                     <h3><span class="mission-icon">👀</span>Vision</h3>
                     <p class="mission-description">
                         若い世代へシルクの魅力を知ってもらう。「えっ、これシルクなの？」から始まる関心を大切に、現代のライフスタイルに合った新しいシルク製品を通じて、伝統産業への興味を育みます。
                     </p>
                 </div>
-                <div class="mission-card fade-in">
+                <div class="mission-card slide-left">
                     <h3><span class="mission-icon">💝</span>Values</h3>
                     <p class="mission-description">
                         絹産業の未来を共に創る。<strong>地域をにぎわす</strong>（群馬の活性化と雇用創出）、<strong>歴史とつなぐ</strong>（伝統と革新の共存）、<strong>仲間を増やす</strong>（世代を超えたコラボ）、<strong>魅力を広める</strong>（シルクの今を発信）の4つの価値観で活動しています。
@@ -618,8 +695,8 @@
             <h2 class="section-title fade-in">活動実績</h2>
             
             <div class="timeline">
-                <div class="timeline-item fade-in">
-                    <div class="timeline-dot"></div>
+                <div class="timeline-item slide-right">
+                    <div class="timeline-dot fade-in"></div>
                     <div class="timeline-content">
                         <div class="timeline-image" style="background-image: url('usui9.jpg');"></div>
                         <div class="timeline-date">2024年5月</div>
@@ -639,8 +716,8 @@
                     </div>
                 </div>
 
-                <div class="timeline-item fade-in">
-                    <div class="timeline-dot"></div>
+                <div class="timeline-item slide-left">
+                    <div class="timeline-dot fade-in"></div>
                     <div class="timeline-content">
                         <div class="timeline-image" style="background-image: url('usui10.jpg');"></div>
                         <div class="timeline-date">2024年6月</div>
@@ -660,8 +737,8 @@
                     </div>
                 </div>
 
-                <div class="timeline-item fade-in">
-                    <div class="timeline-dot"></div>
+                <div class="timeline-item slide-right">
+                    <div class="timeline-dot fade-in"></div>
                     <div class="timeline-content">
                         <div class="timeline-image" style="background-image: url('usui12.jpg');"></div>
                         <div class="timeline-date">2024年9月</div>
@@ -681,8 +758,8 @@
                     </div>
                 </div>
 
-                <div class="timeline-item fade-in">
-                    <div class="timeline-dot"></div>
+                <div class="timeline-item slide-left">
+                    <div class="timeline-dot fade-in"></div>
                     <div class="timeline-content">
                         <div class="timeline-image" style="background-image: url('usui14.jpg');"></div>
                         <div class="timeline-date">2024年10月〜12月</div>
@@ -702,8 +779,8 @@
                     </div>
                 </div>
 
-                <div class="timeline-item fade-in">
-                    <div class="timeline-dot"></div>
+                <div class="timeline-item slide-right">
+                    <div class="timeline-dot fade-in"></div>
                     <div class="timeline-content">
                         <div class="timeline-image" style="background-image: url('usui15.jpg');"></div>
                         <div class="timeline-date">2025年1月〜</div>
@@ -827,9 +904,34 @@
                 });
             }, observerOptions);
 
-            document.querySelectorAll('.fade-in').forEach(el => {
+            document.querySelectorAll('.fade-in, .slide-left, .slide-right').forEach(el => {
                 observer.observe(el);
             });
+
+            // セクション見出しアンダーライン
+            const titleObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('line-visible');
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            document.querySelectorAll('.section-title').forEach(el => {
+                titleObserver.observe(el);
+            });
+
+            // タイムライン縦線ドロー
+            const timelineObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('line-drawn');
+                    }
+                });
+            }, { threshold: 0.05 });
+
+            const timeline = document.querySelector('.timeline');
+            if (timeline) timelineObserver.observe(timeline);
         }
 
         // ヘッダー制御
@@ -854,12 +956,17 @@
             
             // 初期表示要素のアニメーション
             setTimeout(() => {
-                const fadeElements = document.querySelectorAll('.fade-in');
+                const fadeElements = document.querySelectorAll('.fade-in, .slide-left, .slide-right');
                 fadeElements.forEach((el, index) => {
                     if (el.getBoundingClientRect().top < window.innerHeight) {
                         setTimeout(() => {
                             el.classList.add('visible');
                         }, index * 100);
+                    }
+                });
+                document.querySelectorAll('.section-title').forEach(el => {
+                    if (el.getBoundingClientRect().top < window.innerHeight) {
+                        el.classList.add('line-visible');
                     }
                 });
             }, 100);

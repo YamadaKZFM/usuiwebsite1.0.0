@@ -479,6 +479,90 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* 左右スライドイン */
+        .slide-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .slide-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .slide-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .slide-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* info items スタッガー */
+        .contact-info .info-item:nth-child(2) { transition-delay: 0.12s; }
+        .contact-info .info-item:nth-child(3) { transition-delay: 0.24s; }
+
+        /* FAQ items スタッガー */
+        .faq-list .faq-item:nth-child(2) { transition-delay: 0.10s; }
+        .faq-list .faq-item:nth-child(3) { transition-delay: 0.20s; }
+        .faq-list .faq-item:nth-child(4) { transition-delay: 0.30s; }
+        .faq-list .faq-item:nth-child(5) { transition-delay: 0.40s; }
+        .faq-list .faq-item:nth-child(6) { transition-delay: 0.50s; }
+
+        /* ページヘッダーアニメーション */
+        @keyframes pageHeaderReveal {
+            from { opacity: 0; transform: translateY(25px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .page-header h1 {
+            animation: pageHeaderReveal 1s ease 0.2s both;
+        }
+        .page-header p {
+            animation: pageHeaderReveal 1s ease 0.5s both;
+        }
+
+        /* フォームフィールド フォーカスアニメーション */
+        .form-group {
+            position: relative;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            box-shadow: 0 4px 12px rgba(127, 92, 73, 0.15);
+        }
+
+        /* 送信ボタン リップルエフェクト */
+        .submit-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .submit-btn .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(0);
+            animation: rippleEffect 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes rippleEffect {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* FAQ タイトルアンダーライン */
+        .faq-title::after {
+            width: 0 !important;
+            transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
+        }
+        .faq-title.line-visible::after {
+            width: 60px !important;
+        }
     </style>
 </head>
 <body>
@@ -507,7 +591,7 @@
         <div class="container">
             <div class="contact-grid">
                 <!-- 連絡先情報 -->
-                <div class="contact-info fade-in">
+                <div class="contact-info slide-left">
                     <h3>連絡先情報</h3>
                     
                     <div class="info-item">
@@ -531,7 +615,7 @@
                 </div>
 
                 <!-- お問い合わせフォーム -->
-                <div class="contact-form fade-in">
+                <div class="contact-form slide-right">
                     <h3>お問い合わせフォーム</h3>
                     
                     <div class="success-message" id="successMessage">
@@ -688,8 +772,40 @@
                 });
             }, observerOptions);
 
-            document.querySelectorAll('.fade-in').forEach(el => {
+            document.querySelectorAll('.fade-in, .slide-left, .slide-right').forEach(el => {
                 observer.observe(el);
+            });
+
+            // FAQ タイトルアンダーライン
+            const titleObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('line-visible');
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            document.querySelectorAll('.faq-title').forEach(el => {
+                titleObserver.observe(el);
+            });
+        }
+
+        // 送信ボタン リップルエフェクト
+        function initRippleEffect() {
+            const btn = document.getElementById('submitBtn');
+            if (!btn) return;
+            btn.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                const size = Math.max(btn.offsetWidth, btn.offsetHeight);
+                const rect = btn.getBoundingClientRect();
+                ripple.style.cssText = `
+                    width: ${size}px; height: ${size}px;
+                    left: ${e.clientX - rect.left - size / 2}px;
+                    top: ${e.clientY - rect.top - size / 2}px;
+                `;
+                btn.appendChild(ripple);
+                ripple.addEventListener('animationend', () => ripple.remove());
             });
         }
 
@@ -852,15 +968,21 @@
             initFormSubmission();
             initRealTimeValidation();
             initHeaderControl();
-            
+            initRippleEffect();
+
             // 初期表示要素のアニメーション
             setTimeout(() => {
-                const fadeElements = document.querySelectorAll('.fade-in');
+                const fadeElements = document.querySelectorAll('.fade-in, .slide-left, .slide-right');
                 fadeElements.forEach((el, index) => {
                     if (el.getBoundingClientRect().top < window.innerHeight) {
                         setTimeout(() => {
                             el.classList.add('visible');
                         }, index * 100);
+                    }
+                });
+                document.querySelectorAll('.faq-title').forEach(el => {
+                    if (el.getBoundingClientRect().top < window.innerHeight) {
+                        el.classList.add('line-visible');
                     }
                 });
             }, 100);
