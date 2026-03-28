@@ -432,6 +432,84 @@
             text-align: center;
         }
 
+        .gallery-item {
+            cursor: pointer;
+        }
+
+        /* モーダル */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 4px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 350px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-body h3 {
+            font-size: 1.5rem;
+            color: var(--brown-deep);
+            margin-bottom: 1rem;
+        }
+
+        .modal-body p {
+            line-height: 1.8;
+            color: var(--text-body);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--white);
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            z-index: 1;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
         /* =========================
            CTA / Purchase セクション
         ========================= */
@@ -776,6 +854,11 @@
                             <td><strong>シルク糸・作り方ガイド・メッセージカード 全て込み</strong></td>
                             <td><strong>¥1,500</strong></td>
                         </tr>
+                        <tr class="price-highlight">
+                            <td><strong>シルキー</strong></td>
+                            <td><strong>シルクスマホスタンド</strong></td>
+                            <td><strong>¥1,000</strong></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -829,27 +912,27 @@
         <div class="container">
             <h2 class="section-title">ギャラリー</h2>
             <div class="gallery-grid">
-                <div class="gallery-item fade-in">
+                <div class="gallery-item fade-in" onclick="openModal('usui3.jpg', 'メッセージガイド', '美蚕雅に同梱されるメッセージガイドです。大切な人への想いを込めたメッセージカードの書き方や、ギフトとしての活用方法をご紹介しています。')">
                     <div class="gallery-image" style="background-image: url('usui3.jpg'); background-size: cover; background-position: center;"></div>
                     <div class="gallery-caption">メッセージガイド</div>
                 </div>
-                <div class="gallery-item fade-in">
+                <div class="gallery-item fade-in" onclick="openModal('usui4.jpg', '商品パッケージデザイン', '美蚕雅のパッケージデザインです。群馬の伝統と現代のデザインを融合させた、贈り物にもぴったりのパッケージに仕上げました。')">
                     <div class="gallery-image" style="background-image: url('usui4.jpg'); background-size: cover; background-position: center;"></div>
                     <div class="gallery-caption">商品パッケージデザイン</div>
                 </div>
-                <div class="gallery-item fade-in">
+                <div class="gallery-item fade-in" onclick="openModal('usui5.jpg', 'ワークショップの風景', 'ワークショップでは、シルクミサンガの作り方を体験できます。親子での参加も大歓迎！約40〜60分で完成でき、初心者の方でも楽しんでいただけます。')">
                     <div class="gallery-image" style="background-image: url('usui5.jpg'); background-size: cover; background-position: center;"></div>
                     <div class="gallery-caption">ワークショップの風景</div>
                 </div>
-                <div class="gallery-item fade-in">
+                <div class="gallery-item fade-in" onclick="openModal('usui6.jpg', '店頭においている様子', '実際に店頭で美蚕雅を展示・販売している様子です。手に取って商品の質感やシルクの美しさを確かめていただけます。')">
                     <div class="gallery-image" style="background-image: url('usui6.jpg'); background-size: cover; background-position: center;"></div>
                     <div class="gallery-caption">店頭においている様子</div>
                 </div>
-                <div class="gallery-item fade-in">
+                <div class="gallery-item fade-in" onclick="openModal('usui7.jpg', 'エコラボカフェでの体験版', 'エコラボカフェにて開催した体験イベントの様子です。カフェの落ち着いた雰囲気の中で、シルクミサンガ作りを楽しんでいただきました。')">
                     <div class="gallery-image" style="background-image: url('usui7.jpg'); background-size: cover; background-position: center;"></div>
                     <div class="gallery-caption">エコラボカフェでの体験版</div>
                 </div>
-                <div class="gallery-item fade-in">
+                <div class="gallery-item fade-in" onclick="openModal('usui8.jpg', 'シルク糸', '碓氷製糸株式会社から仕入れた純国産シルク糸です。絹遊塾工房風花様にて草木染めで染色し、3色の美しい色合いに仕上げています。')">
                     <div class="gallery-image" style="background-image: url('usui8.jpg'); background-size: cover; background-position: center;"></div>
                     <div class="gallery-caption">シルク糸</div>
                 </div>
@@ -906,8 +989,43 @@
         </div>
     </footer>
 
+    <!-- モーダル -->
+    <div class="modal-overlay" id="galleryModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-image" id="modalImage"></div>
+            <div class="modal-body">
+                <h3 id="modalTitle"></h3>
+                <p id="modalDescription"></p>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script>
+        // ギャラリーモーダル
+        function openModal(imageSrc, title, description) {
+            const modal = document.getElementById('galleryModal');
+            document.getElementById('modalImage').style.backgroundImage = "url('" + imageSrc + "')";
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalDescription').textContent = description;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('galleryModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('galleryModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
         // スクロールアニメーション
         function initScrollAnimations() {
             const observerOptions = {
